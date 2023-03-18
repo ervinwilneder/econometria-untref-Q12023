@@ -4,17 +4,25 @@ FROM rocker/tidyverse
 # Set working directory
 WORKDIR /home/rstudio
 
-# Copy all required files
-COPY . .
-
-# Update, install requiRements package, install R packages from requirements.txt,
-# install Quarto, and cleanup cache afterwards to reduce image size
+# Update and install required system packages
 RUN apt-get update && \
-    R -e 'install.packages("requiRements")' && \
-    R -e 'requiRements::install(path_to_requirements = "requirements.txt")' && \
-    apt-get install -y curl && \
-    curl -sSL https://downloads.quarto.org/quarto-cli/0.2.289/quarto-cli-0.2.289-linux.deb -o quarto.deb && \
-    apt-get install -y ./quarto.deb && \
-    rm quarto.deb && \
+    apt-get install -y curl gdebi-core && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# Install requiRements package
+RUN R -e 'install.packages("requiRements")'
+
+# Copy the requirements file
+COPY requirements.txt .
+
+# Install R packages from requirements.txt
+RUN R -e 'requiRements::install(path_to_requirements = "requirements.txt")'
+
+# Install Quarto and cleanup cache afterwards to reduce image size
+RUN curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb && \
+    gdebi -n quarto-linux-amd64.deb && \
+    rm quarto-linux-amd64.deb
+
+# Copy remaining required files
+COPY . .
