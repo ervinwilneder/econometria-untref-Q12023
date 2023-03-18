@@ -6,7 +6,7 @@
 #### Seteo ####
 ###############
 
-oldpar<-par(no.readonly = TRUE)
+oldpar <- par(no.readonly = TRUE)
 setwd("C:/Users/carlo/Dropbox/Bases y Sintaxis Clases/Cuentas Nacionales")
 
 ####################################

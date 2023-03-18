@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  rstudio:
+    build: .
+    image: statistics/rstudio
+    container_name: rstudio
+    ports:
+      - 8787:8787
+    environment:
+      - ROOT=true
+      - DISABLE_AUTH=true
+    volumes:
+      - rstudio-config:/home/rstudio/.config/rstudio
+      - r-packages:/usr/local/lib/R
+      - ./rstudio:/home/rstudio
+    restart: unless-stopped
+
+volumes:
+  # Volume to store RStudio configuration data
+  rstudio-config:
+
+  # Volume to store installed R packages
+  r-packages:
