@@ -1,0 +1,357 @@
+---
+title: "Politica Monetaria con Expectativas - Curva de Phillips - Ley de Okun"
+author: 'Alumnito: El Carlitos Jara'
+date: "1 de agosto de 2019"
+output:
+  html_document:
+    #css: d:/Dropbox/Archivos de la Facultad/Apuntes de R/Estilo.css
+    css: c:/Users/charly/Dropbox/Archivos de la Facultad/Apuntes de R/Estilo.css
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+    number_sections: false
+    highlight: null
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup,echo=FALSE,message=FALSE,include=FALSE}
+require("knitr")
+opts_knit$set(root.dir = normalizePath("C:/Users/charly/Dropbox/Archivos de la Facultad/Apuntes para clases/Econometria"))
+#opts_knit$set(root.dir = normalizePath("D:/Dropbox//Archivos de la Facultad/Apuntes para clases/Econometria"))
+opts_chunk$set(echo=FALSE,message = FALSE)
+``` 
+
+```{r knitr, results="asis",echo=FALSE}
+options(knitr.table.format = "html")
+options(knitr.kable.NA = '')
+#Para sacar la notacion cientifica
+options("scipen"=999, "digits"=4)
+```
+
+```{r}
+library("Hmisc")
+library ("knitr")
+library ("kableExtra")
+```
+
+
+El presente trabajo replica una monografia elaborada como trabajo practica de clase, el mismo fue realizado por Jana Hroncova.
+
+https://dialnet.unirioja.es/descarga/articulo/3090660.pdf
+
+El objetivo del presente trabajo es relacionar varios conceptos importantes de la economia como lo son:
+
+* Ley de Okun
+
+El espíritu del trabajo original de Okun (1962) era medir el gran costo social del desempleo por la pérdida de producto potencial que produce. Básicamente el coeficiente de Okun es un coeficiente de oferta que mide la brecha entre el nivel 
+de PIB que se lograría si la demanda agregada fuese compatible con la tasa natural de desempleo.
+El coeficiente hallado determina cuanto subiria el PBI en promedio por cada punto de desempleo que exista.
+
+Para mas informacion, leer https://aaep.org.ar/anales/works05/gulli.pdf
+
+* Curva de Phillips
+
+Relacion empirica formulada en el siglo XX por un economista ingles que estudio la relacion existente entre el desempleo y la inflacion para el periodo de 1861-1957.
+
+*Funcion de demanda agregada
+
+*Expectativas adaptativas y racionales
+
+Las expectativas adaptativas se refiere a que informacion utiliza el agente economica para suponer los valores que se van a observar en el futuro. Con expectativas adaptativas, aplicadas a la inflacion, el agente utiliza la informacion de la inflacion pasada para definir la **_inflacion esperada_** para el o los proximos periodos.
+
+Las expectativas racionales suponen que el agente economico busca siempre maximizar los beneficios utilizando toda la informacion que posee de manera racional y eficiente.
+
+http://nulan.mdp.edu.ar/1183/1/00616.pdf
+
+<h1>1 - Formulaciones matematicas</h1>
+
+<h2>Ley de Okun</h2>
+
+$$u_{t}-u_{t-1}=-\alpha*(y_{t}-\bar y_{N})$$
+Transformando la ecuacion, la misma puede ser formulada como:
+
+$$ \Delta u = \alpha_{0}+\alpha_{1}*y_{t}+e_{t}$$
+
+Siendo:
+
+$u_{t}$ = Tasa de Desempleo en el periodo t.
+
+$u_{t-1}$ = Tasa de Desempleo en el periodo t.
+
+$u_{t}-u_{t-1}$ = Tasa de variacion anual del desempleo.
+
+$y_{t}$ = Crecimiento del PBI entre dos periodos consecutivos. Se define como $\frac{y_{t}-y_{t-1}}{y_{t-1}}$
+
+$\alpha$ = Coeficiente que determina la disminucion promedio (la estimacion es positiva y en la ecuacion es negativa) del desempleo ante un aumento de un 1% del PBI.
+
+$\bar Y_{N}$ = Tasa de Crecimiento Promedio del PBI. Se calcula como $\frac{\alpha_{0}}{-\alpha_{1}}$.
+
+Matematica corresponde al valor de X cuando Y es igual a cero.
+
+<h2>Curva de Phillips aumentado por expectativas</h2>
+
+$$\pi_{t}-\pi^e_{t}=-\beta*(u_{t}-\bar u_{N})$$
+Transformando la ecuacion, la misma puede ser formulada como:
+
+$$ \Delta \pi_{t} = \beta_{0}+\beta_{1}*u_{t}+e_{t}$$
+
+Siendo:
+
+$\pi_{t}$ = Tasa de Inflacion en el periodo t. Se define como $\frac{P_{t}-P_{t-1}}{P_{t-1}}$
+
+$\pi_{t-1}$ = Tasa de Inflacion en el periodo t.
+
+$\pi_{t}-\pi_{t-1}$ = Tasa de variacion anual del desempleo.
+
+$\beta$ = Coeficiente que determina la disminucion promedio (la estimacion es positiva y en la ecuacion es negativa) del desempleo ante un aumento de un 1% del PBI.
+
+$\bar u_{N}$ = Tasa Natural de Desempleo. Es la tasa de desempleo generada por la gente que se encuentra en transiccion entre trabajos. No corresponde a gente que busca empleo y no encuentra. Tiene relacion con la NAIRU (Tasa de Desempleo no Aceleradora de la Inflacion) y se corresponde al PBI Potencial.
+
+Se calcula como $\frac{\beta_{0}}{-\beta_{1}}$.
+
+Matematicamente corresponde al valor de X cuando Y es igual a cero.
+
+<h2>Funcion de Demanda Agregada</h2>
+
+La Demanda Agregada esta definida por $Y_{t}=f(\frac{M_{t}}{P_{t}};G_{t};T_{t})$
+
+Donde M es la oferta monetaria, P el nivel de precios, G el nivel de Gasto Publico y T el nivel de impuestos.
+
+Dado que solo nos interesa la influencia de la politica monetaria, vamos a suponer que G y T son iguales a cero a lo largo de toda la serie.
+
+Por lo tanto, la funcion queda determinada por $Y_{t}=f(\frac{M_{t}}{P_{t}})$.
+
+Aplicando logaritmos para expresar la ecuacion como incrementos, esta queda determinada por:
+
+$$\Delta y_{t} = \Delta M_{t} - \pi_{t}$$
+
+<h2>Formacion de Expectativas</h2>
+
+Las **_expectativas adaptativas parte de la hipotesis que estas se ajustan y corrigen paso a paso con el transcurso del tiempo_**.
+
+$$\pi^e_{t}-\pi^e_{t-1}=\theta*(\pi_{t}-\pi^e_{t-1})$$
+
+Operando
+
+$$\pi^e_{t}=\theta*\pi_{t}+(1-\theta)*\pi^e_{t-1}~~~~para~~0 \leq \theta \leq1$$
+
+Para el presente trabajo, asumiremos que $\theta=1$, por lo tanto $\pi^e_{t}=\pi_{t-1}$ y la curva de Phillips queda:
+
+$$\pi_{t}-\pi_{t-1}=-\beta*(u_{t}-\bar u_{N})$$
+<h2>Valores Iniciales y de Equilibrio</h2>
+
+$u_{0}=u_{t}=\bar u=u_{N}$
+
+$\Delta y_{t}=\Delta y_{t-1}=\bar Y_{N}$
+
+$\pi_{t}=\pi^e_{t}=\bar \pi=(\Delta M-\bar Y_{N})$ La inflacion tiene a la diferencia entre **_aumento de oferta monetaria menos incremento del Producto$
+
+$\bar u$, $\bar \pi$ y $\bar Y_{N}$ son los valores estacionarios o de largo plazo del Desempleo, inflacion y Demanda Agregada.
+
+<h1>2 - Resolucion</h1>
+
+Para resolver el ejercicio, usaremos datos extraidos de OCDE.
+
+La presente base fue construida con las siguientes variables
+
+* Tasa de Desempleo Armonizado Anualizado para España 
+
+https://data.oecd.org/unemp/harmonised-unemployment-rate-hur.htm
+
+* Producto Bruto Interno Total Anual en mill de U$S 
+
+https://data.oecd.org/gdp/gross-domestic-product-gdp.htm
+
+* Indice de Inflacion Anual 
+
+https://data.oecd.org/price/inflation-cpi.htm
+
+```{r}
+base<-spss.get("Politica Monetaria En El Modelo Con Expectativas Curva De Phililps - Datos.sav")
+kable(base,align="c")%>%
+  kable_styling(bootstrap_options=c("striped","borderer","condensed"), full_width = F)
+```
+
+Dado que la base no esta completa, usaremos unicamente los datos correspondientes entre 1987 y 2017.
+
+```{r}
+base1<-base[27:57,]
+kable(base1,align="c")%>%
+  kable_styling(bootstrap_options=c("striped","borderer","condensed"), full_width = F)
+```
+
+Debemos construir dos variables nuevas para la Ley de Okun, debemos calcular **_la diferencia en el desempleo entre dos periodos consecutivos_** $(u_{t}-u_{(t-1)})$ y expresar el PBI como variacion $(\frac{y_{t}-y_{t-1}}{y_{t-1}})$.
+
+Para armar la curva de Phillips, debemos expresar la inflacion **_como diferencia entre dos periodos continuos_**. Dado que tenemos el Indice de Inflacion, armaremos una primera columna para calcular la inflacion anual y luego haremos la diferencia entre periodos.
+
+El ultimo paso es "cortar" la base en funcion que las variables necesarias tengan valores, recordemos que las variables originales tienen datos para periodos mas o menos completos.
+
+```{r}
+n<-nrow(base)
+a<-data.frame("Dif-Desemp"=matrix(c(0,diff(base[,2])),ncol = 1))
+b<-data.frame("Var PBI"=matrix(0,ncol=1))
+for (i in 1:(n-1)){
+b[1,]<-NA 
+b[i+1,]<-round((base[i+1,3]-base[i,3])/base[i,3]*100,3)
+}
+c<-data.frame("Infl Anual"=matrix(0,ncol=1))
+for (i in 1:(n-1)){
+  c[1,]<-0
+  c[i+1,]<-round((base[i+1,4]-base[i,4])/base[i,4]*100,3)
+}
+d<-data.frame("Dif Inflacion"=matrix(0,ncol=1))
+for (i in 1:(n-1)){
+  d[1,]<-NA 
+  d[i+1,]<-round((c[i+1,]-c[i,]),3)
+}
+datos<-cbind(Desempleo=base$Desempleo,a,PBI=base$PBI,b,Inflacion=base$Inflacion,c,d)
+datos<-datos[28:57,]
+kable(datos,align="c")%>%
+  kable_styling(bootstrap_options=c("striped","borderer","condensed"), full_width = F)
+```
+
+<h2>Ley de Okun</h2>
+
+Recordemos que
+
+$$u_{t}-u_{t-1}=-\alpha*(y_{t}-\bar y_{N})$$
+
+Transformando la ecuacion, la misma puede ser formulada como:
+
+$$ \Delta u = \beta_{0}+\beta_{1}*y_{t}+e_{t}$$
+Siendo:
+
+* Y = variable dependiente = Diferencia Tasa de Desempleo
+
+* x = Variable independiente = Variacion PBI
+
+Vemos ahora el grafico de dispersion y la tabla de coeficientes parciales de la regresion
+
+```{r}
+reg<-lm(datos$Dif.Desemp~datos$Var.PBI)
+summary(reg)
+plot(datos$Var.PBI,datos$Dif.Desemp,ylab="Dif Tasa de Desempleo",xlab="Variacion PBI",pch=19,col="red",main="Ley de Okun para España 1988-2018")
+abline(h=0,lwd=2)
+abline(coef(reg),lwd=2,col="green4")
+```
+
+Recordemos tambien que habiamos definido a la tasa de crecimiento promedio como:
+
+$\bar Y_{N}$ = Tasa de Crecimiento Promedio del PBI. Se calcula como $\frac{\alpha_{0}}{-\alpha_{1}}$.
+
+Con la regresion obtenido, podemos calcular este valor
+
+$\bar Y_{N}$ = Tasa de Crecimiento Promedio del PBI = $\frac{\alpha_{0}}{-\alpha_{1}}$ = $-\frac{`r reg$coefficients[1]`}{`r reg$coefficients[2]`}$ = `r reg$coefficients[1]/-reg$coefficients[2]`
+
+<h2>Curva de Phillips</h2>
+
+Recordemos que
+
+$$\pi_{t}-\pi^e_{t}=-\beta*(u_{t}-\bar u_{N})$$
+
+Transformando la ecuacion, la misma puede ser formulada como:
+
+$$ \Delta \pi_{t} = \beta_{0}+\beta_{1}*u_{t}+e_{t}$$
+
+Siendo:
+
+* Y = variable dependiente = Diferencia Inflacion
+
+* x = Variable independiente = Desempleo
+
+Vemos ahora el grafico de dispersion y la tabla de coeficientes parciales de la regresion
+
+```{r}
+reg1<-lm(datos$Dif.Inflacion~datos$Desempleo)
+summary(reg1)
+plot(datos$Desempleo,datos$Dif.Inflacion,ylab="Desempleo",xlab="Diferencia Inflacion",pch=19,col="red",main="Curva de Phillips para España 1988-2018")
+abline(h=0,lwd=2)
+abline(coef(reg1),lwd=2,col="green4")
+```
+
+Recordemos tambien que habiamos definido a la tasa de crecimiento promedio como:
+
+$\bar Y_{N}$ = Tasa de Natural de Desempleo. Se calcula como $\frac{\beta_{0}}{-\beta_{1}}$.
+
+Con la regresion obtenido, podemos calcular este valor
+
+$\bar u_{N}$ = Tasa Natural de Desempleo = $\frac{\beta_{0}}{-\beta_{1}}$ = $-\frac{`r reg1$coefficients[1]`}{`r reg1$coefficients[2]`}$ = `r reg1$coefficients[1]/-reg1$coefficients[2]`.
+
+<h2>Demanda Agregada</h2>
+
+Con los datos obtenidos de las regresiones, podemos calcular el valor de cada Demanda Agregada la cual nos permitira calcular los niveles de Desempleo e Inflacion para cada periodo.
+
+```{r}
+alfa<--reg$coefficients[2]
+beta<--reg1$coefficients[2]
+alfa<-2/7
+beta<-1/7
+cn<-reg$coefficients[1]/-reg$coefficients[2]
+dn<-reg1$coefficients[1]/-reg1$coefficients[2]
+
+```
+
+Para esto necesitamos entonces
+
+* Coeficiente Ley de Okun = $\alpha$ = `r alfa`.
+
+* Coeficiente Curva de Phillips = $\beta$ = `r beta`.
+
+* Tasa Promedio de Crecimiento = $\Delta y_{N}$ = `r cn`.
+
+* Tasa Natural de Desempleo = $\bar u_{n}$ = $u_{0}$ = `r dn`.
+
+Se desea analizar el impacto de la politica monetaria sobre la demanda y particularmente sobre el Desempleo y la inflacion, 
+
+**_vamos a asumir que el primer periodo la oferta monetaria aumenta 19.5% y el resto de los periodos 10%_**, estos valores quedaran fijos a lo largo de toda la serie.
+
+Los valores iniciales estaran dados por:
+
+* Desempleo = Desempleo Natural
+
+* Inflacion = Oferta Monetaria - Tasa de Crecimiento Promedio
+
+* PBI = Tasa de Crecimiento Promedio.
+
+Una vez definidos los valores iniciales, calculamos primero el PBI y luego la Inflacion y el Desempleo.
+
+```{r}
+m0<-19.5
+m1<-10
+p<-data.frame(Desempleo=matrix(0,ncol=1),Inflacion=matrix(0,ncol=1),Producto=matrix(0,ncol=1),Moneda=matrix(c(m0,rep(m1,99)),ncol=1,))
+p$Desempleo[1]<-dn
+p$Inflacion[1]<-m0-cn
+p$Producto[1]<-cn
+for(i in 2:100){
+ p$Producto[i]<-(1/(1+alfa*beta))*(p$Moneda[i]-p$Inflacion[i-1]+beta*(p$Desempleo[i-1]-dn)+alfa*beta*cn)
+ p$Desempleo[i]<-p$Desempleo[i-1]-alfa*(p$Producto[i]-cn)
+ p$Inflacion[i]<-p$Inflacion[i-1]-beta*(p$Desempleo[i]-dn)
+}
+kable(head(p),align="c")%>%
+  kable_styling(bootstrap_options=c("striped","borderer","condensed"), full_width = F)
+```
+
+Y Vemos el grafico de la Curva de Phillips y cada variable por separada para ver el camino hacia la convergencia. Las lineas representan los valores de convergencia
+
+```{r}
+par(mfrow=c(2,2),mar=c(4,4,2,3))
+plot(p$Desempleo,p$Inflacion,type="b",pch=19,col="red",xlab="Desempleo",ylab="Inflacion")
+abline(v=dn,h=m1-cn,lwd=2)
+plot(p$Desempleo,pch=19,col="skyblue4",xlab="Periodo",ylab="Desempleo",main="Desempleo")
+abline(h=dn,lwd=2)
+plot(p$Inflacion,pch=19,col="green4",xlab="Periodo",ylab="Inflacion",main="Inflacion")
+abline(h=m1-cn,lwd=2)
+plot(p$Producto,pch=19,col="magenta",xlab="Periodo",ylab="Producto",main="Producto")
+abline(h=cn,lwd=2)
+```
+
+<h1>3 - Conclusiones</h1>
+
+Los graficos finales resultan muy reveladores, ya que representan la velocidad de convergencia y hacia que valores lo hacen.
+El cambio de los valores de alfa y beta estan asociados a la velocidad de la convergencia y los valores naturales de desempleo, crecimiento y la diferencia entre oferta monetaria y crecimiento determinan hacia que valores lo hacen.
+
+Un ejercicio interesante seria cambiar los valores de alfa y beta para ver no solo la velocidad, ya dijimos que esto se hace en menos cantidad de periodos, sino analizar como son las fluctuaciones de las variables hacia ese camino.
+<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>
